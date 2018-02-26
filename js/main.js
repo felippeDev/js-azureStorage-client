@@ -1,10 +1,10 @@
-console.log('it works');
+var STORAGE_ACCOUNT = config.STORAGE_ACCOUNT;
+var CONNECTION_STRING = config.CONNECTION_STRING;
+var QUERY_STRING = config.QUERY_STRING;
+var SAS_TOKEN = config.SAS_TOKEN;
 
-const STORAGE_ACCOUNT = '';
-const SAS_TOKEN = ''
-
-var blobUri = 'https://' + 'STORAGE_ACCOUNT' + '.blob.core.windows.net';
-var blobService = AzureStorage.createBlobServiceWithSas(blobUri, 'SAS_TOKEN');
+var blobUri = 'https://' + STORAGE_ACCOUNT + '.blob.core.windows.net';
+var blobService = AzureStorage.createBlobServiceWithSas(blobUri, SAS_TOKEN);
 
 // List blobs
 // -------------------------------------------------------------------------
