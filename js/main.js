@@ -38,7 +38,6 @@ var speedSummary = blobService.createBlockBlobFromBrowserFile('mycontainer', fil
 });
 refreshProgress();
 
-// aux.
 function refreshProgress() {
   setTimeout(function() {
       if (!finishedOrError) {
