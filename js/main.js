@@ -8,56 +8,73 @@ var blobService = AzureStorage.createBlobServiceWithSas(blobUri, SAS_TOKEN);
 
 // List blobs
 // -------------------------------------------------------------------------
-blobService.listBlobsSegmented('mycontainer', null, function (error, results) {
-  if (error) {
-    // List blobs error
-  } else {
-    for (var i = 0, blob; blob = results.entries[i]; i++) {
-      // Deal with blob object
-      console.log(i);
+function listBlobs() {
+  blobService.listBlobsSegmented('tests', null, function (error, results) {
+    console.log('SAS: ' + SAS_TOKEN);
+    if (error) {
+      // List blobs error
+      console.log('List blob error: ' + error);
+    } else {
+      for (var i = 0, blob; blob = results.entries[i]; i++) {
+        // Deal with blob object
+        console.log(blob);
+        var blobListElement = document.getElementById("blobList");
+        var blobListItem = document.createElement('li');
+
+        var blobItemLocation = blobService.getUrl('tests', blob.name, SAS_TOKEN);
+        console.log('Location: ' + blobItemLocation);
+
+        var blobItem = document.createElement('a');
+        blobItem.href = blobItemLocation;
+        blobItem.target = '_blank';
+        blobItem.textContent = blob.name;
+                
+        blobListItem.appendChild(blobItem);
+        blobListElement.appendChild(blobListItem);
+      }
     }
-  }
-});
+  });
+}
 
 // Upload blob
 // -------------------------------------------------------------------------
 // If one file has been selected in the HTML file input element
-var file = document.getElementById('fileinput').files[0];
+// var file = document.getElementById('fileinput').files[0];
 
-var customBlockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
-blobService.singleBlobPutThresholdInBytes = customBlockSize;
+// var customBlockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
+// blobService.singleBlobPutThresholdInBytes = customBlockSize;
 
-var finishedOrError = false;
-var speedSummary = blobService.createBlockBlobFromBrowserFile('mycontainer', file.name, file, { blockSize: customBlockSize }, function (error, result, response) {
-  finishedOrError = true;
-  if (error) {
-    // Upload blob failed
-  } else {
-    // Upload successfully
-  }
-});
-refreshProgress();
+// var finishedOrError = false;
+// var speedSummary = blobService.createBlockBlobFromBrowserFile('tests', file.name, file, { blockSize: customBlockSize }, function (error, result, response) {
+//   finishedOrError = true;
+//   if (error) {
+//     // Upload blob failed
+//   } else {
+//     // Upload successfully
+//   }
+// });
+// refreshProgress();
 
-function refreshProgress() {
-  setTimeout(function() {
-      if (!finishedOrError) {
-          var process = speedSummary.getCompletePercent();
-          displayProcess(process);
-          refreshProgress();
-      }
-  }, 200);
-}
+// function refreshProgress() {
+//   setTimeout(function () {
+//     if (!finishedOrError) {
+//       var process = speedSummary.getCompletePercent();
+//       displayProcess(process);
+//       refreshProgress();
+//     }
+//   }, 200);
+// }
 
 // Download blob
 // -------------------------------------------------------------------------
-var downloadLink = blobService.getUrl('mycontainer', 'myblob', 'SAS_TOKEN');
+// var downloadLink = blobService.getUrl('tests', 'myblob', 'SAS_TOKEN');
 
 // Delete blob
 // -------------------------------------------------------------------------
-blobService.deleteBlobIfExists(container, blob, function(error, result) {
-  if (error) {
-      // Delete blob failed
-  } else {
-      // Delete blob successfully
-  }
-});
+// blobService.deleteBlobIfExists(container, blob, function (error, result) {
+//   if (error) {
+//     // Delete blob failed
+//   } else {
+//     // Delete blob successfully
+//   }
+// });
