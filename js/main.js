@@ -5,6 +5,7 @@ var SAS_TOKEN = config.SAS_TOKEN;
 
 var blobUri = 'https://' + STORAGE_ACCOUNT + '.blob.core.windows.net';
 var blobService = AzureStorage.createBlobServiceWithSas(blobUri, SAS_TOKEN);
+console.log(blobService);
 
 // List blobs
 // -------------------------------------------------------------------------
@@ -21,19 +22,40 @@ function listBlobs() {
         var blobListElement = document.getElementById("blobList");
         var blobListItem = document.createElement('li');
 
-        var blobItemLocation = blobService.getUrl('tests', blob.name, SAS_TOKEN);
+        var blobItemLocation = getSAS('tests', blob.name);
         console.log('Location: ' + blobItemLocation);
 
         var blobItem = document.createElement('a');
         blobItem.href = blobItemLocation;
         blobItem.target = '_blank';
         blobItem.textContent = blob.name;
-                
+
         blobListItem.appendChild(blobItem);
         blobListElement.appendChild(blobListItem);
       }
     }
   });
+}
+
+function getSAS(containerName, blobName) {
+  console.log('iosdhfiuhsduifhiusdhuihsduihdsfiuhdfsiuhsdfiu')
+  var startDate = new Date();
+  var expiryDate = new Date(startDate);
+
+  expiryDate.setMinutes(startDate.getMinutes() + 100);
+  startDate.setMinutes(startDate.getMinutes() - 100);
+
+  var sharedAccessPolicy = {
+    AccessPolicy: {
+      Permissions: blobService.BlobUtilities.SharedAccessPermissions.READ,
+      Start: startDate,
+      Expiry: expiryDate
+    }
+  };
+
+  var token = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
+  console.log('LOGO DO INFERNO: ' + token);
+  return sasUrl = blobService.getUrl(containerName, blobName, token);
 }
 
 // Upload blob
